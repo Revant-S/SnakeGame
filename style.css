@@ -1,0 +1,80 @@
+.gameBoard {
+  display: grid;
+  grid-template-columns: repeat(20, 25px);
+  grid-template-rows: repeat(20, 25px);
+  align-self: center;
+  gap: 0px;
+  border: 2px solid black;
+  background-image: url(board.png);
+}
+.overall {
+  display: flex;
+  justify-content: space-evenly;
+}
+.gridItem {
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  /* border: 1px solid black; */
+}
+
+.snake1 {
+  background-color: rgb(71, 8, 71);
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.snake2 {
+  background-color: rgb(220, 119, 220);
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.scoreBoard {
+  display: flex;
+  border: 2px solid black;
+  /* height: 80px;
+  width: 190px; */
+  align-self: flex-start;
+  margin-left: 40px;
+  font-size: 40px;
+  text-align: center;
+}
+.food {
+  background-color: red;
+  border-radius: 20px;
+}
+.food2 {
+  background-color: darkgoldenrod;
+  border-radius: 20px;
+}
+.food2 {
+  background-color: darkblue;
+  border-radius: 20px;
+}
+.gameBorder {
+  padding: 30px;
+  border: 1px solid black;
+  background-image: url(borderFinal.png);
+}
+
+
+.teleportingWindow{
+  background-color: blanchedalmond;
+}
+.life{
+  display: flex;
+  margin-top: 20px;
+ border: 1px solid black;
+ gap: 2px;
+ height: 60px;
+
+}
+
+.lifeElement{
+  background-color: green;
+  height: 60px;
+  width: 30px;
+  border-radius: 2px;
+}
