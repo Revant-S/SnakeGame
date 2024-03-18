@@ -3,7 +3,6 @@ const scoreBoard1 = document.querySelector("#player1");
 const scoreBoard2 = document.querySelector("#player2");
 const player1LifeBoard = document.querySelector("#player1Life");
 const player2LifeBoard = document.querySelector("#player2Life");
-
 function gameStart() {
   for (let i = 1; i <= 400; i++) {
     const newDiv = document.createElement("div");
@@ -11,10 +10,6 @@ function gameStart() {
     gameBoard.appendChild(newDiv);
   }
 }
-
-
-
-
 gameStart();
 const NodeList = document.querySelectorAll(".gridItem");
 const scoreBoard = document.querySelector(".scoreBoard");
@@ -23,7 +18,6 @@ let p = [0, 40];
 const food = "food";
 let count = 1;
 function createSnake(Name) {
-
   let q = p[0];
   this.playerName = Name;
   this.colorClass = snakeColor[0];
@@ -40,46 +34,39 @@ function createSnake(Name) {
 }
 function populateLifeBoard() {
   for (let index = 0; index < 5; index++) {
-    const newDiv1 = document.createElement('div'); 
+    const newDiv1 = document.createElement("div");
     newDiv1.classList.add("lifeElement");
     player1LifeBoard.appendChild(newDiv1);
 
-    const newDiv2 = document.createElement('div'); 
+    const newDiv2 = document.createElement("div");
     newDiv2.classList.add("lifeElement");
-    player2LifeBoard.appendChild(newDiv2); 
+    player2LifeBoard.appendChild(newDiv2);
   }
 }
-
 populateLifeBoard();
-
-const snake1 = new createSnake('snake1');
-const snake2 = new createSnake('snake2');
+const snake1 = new createSnake("snake1");
+const snake2 = new createSnake("snake2");
 function updateLife(player) {
   let playerLife = player.life;
-  if (player.playerName == 'snake1') {
+  if (player.playerName == "snake1") {
     while (player1LifeBoard.firstChild) {
       player1LifeBoard.removeChild(player1LifeBoard.firstChild);
     }
-  }
-  else if(player.playerName == 'snake2'){
+  } else if (player.playerName == "snake2") {
     while (player2LifeBoard.firstChild) {
       player2LifeBoard.removeChild(player2LifeBoard.firstChild);
     }
   }
   for (let index = 0; index < playerLife; index++) {
-    const newDiv = document.createElement('div');
+    const newDiv = document.createElement("div");
     newDiv.classList.add("lifeElement");
-    if (player.playerName == 'snake1' ) {
+    if (player.playerName == "snake1") {
       player1LifeBoard.appendChild(newDiv);
-    }
-    else{
+    } else {
       player2LifeBoard.appendChild(newDiv);
-
     }
   }
 }
-
-
 function changeColour(array, classToset) {
   NodeList.forEach((node) => {
     node.classList.remove(classToset);
@@ -129,12 +116,10 @@ function moveTheSnake(player, foodPosition) {
     updateLife(player);
     if (!player.life) {
       alert("Game Over! for " + player.colorClass);
-    clearInterval(player.intervalId);
-    removeTheSnake(player);
-    console.log(error);
+      clearInterval(player.intervalId);
+      removeTheSnake(player);
+      console.log(error);
     }
-
-    
   }
 }
 function updateScoreBoard(player) {
