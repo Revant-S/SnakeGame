@@ -72,6 +72,11 @@
 
 }
 
+.powerUps{
+  background-color: gold;
+  border-radius: 5px;
+}
+
 .lifeElement{
   background-color: green;
   height: 60px;

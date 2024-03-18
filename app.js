@@ -17,6 +17,7 @@ let snakeColor = ["snake1", "snake2"];
 let p = [0, 40];
 const food = "food";
 let count = 1;
+const powerUpsPosition = -1;
 function createSnake(Name) {
   let q = p[0];
   this.playerName = Name;
@@ -29,6 +30,7 @@ function createSnake(Name) {
   this.snakeLength = 1;
   this.intervalId = null;
   this.life = 5;
+  this.foodEaten = 0;
   snakeColor.shift();
   p.shift();
 }
@@ -93,6 +95,15 @@ function removeTheSnake(player) {
   player.current = null;
 }
 let foodPosition = generateFood();
+
+function generateLifeBoosters() {
+  const p = Math.floor(Math.random*NodeList.length);
+  while (p == foodPosition) {
+    p = Math.floor(Math.random*NodeList.length);
+  }
+  NodeList[p].classList.add("powerUps");
+  return p;
+}
 function moveTheSnake(player, foodPosition) {
   try {
     if (
@@ -129,6 +140,9 @@ function updateScoreBoard(player) {
     scoreBoard2.innerText = (snake2.snakeLength - 1) * 5;
   }
 }
+
+
+
 function responseToKey(keyStroke, player) {
   player.potentialTailPosition2 = player.potentialTailPosition;
   player.potentialTailPosition = player.current;
@@ -153,11 +167,23 @@ function responseToKey(keyStroke, player) {
     NodeList[foodPosition].classList.remove(food);
     foodPosition = generateFood();
     player.snakeLength++;
+    player.foodEaten++;
     updateScoreBoard(player.colorClass);
   }
+  if (player.life<2 ) {
+    powerUpsPosition = generateLifeBoosters();
+  }
+  if (powerUpsPosition == player.current) {
+    player.life++;
+    updateLife(player);
+  }
 }
+
+
 changeColour(snake1.snakeBody, snake1.colorClass);
 changeColour(snake2.snakeBody, snake2.colorClass);
+
+
 window.addEventListener("keydown", function (e) {
   if (snake1.snakeLength) {
     if (e.code === "ArrowDown") {
@@ -185,6 +211,11 @@ window.addEventListener("keydown", function (e) {
     console.log("snake is dead");
   }
 });
+
+
+
+
+
 window.addEventListener("keydown", function (e) {
   if (snake2.snakeLength) {
     if (e.code === "KeyS" || e.code === "Keys") {
