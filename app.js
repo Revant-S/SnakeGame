@@ -7,6 +7,7 @@ function gameStart() {
   for (let i = 1; i <= 400; i++) {
     const newDiv = document.createElement("div");
     newDiv.setAttribute("class", "gridItem");
+    // newDiv.innerText=i;   //for reference
     gameBoard.appendChild(newDiv);
   }
 }
@@ -123,8 +124,7 @@ function moveTheSnake(player, foodPosition) {
     player.snakeBody.push(player.current);
     changeColour(player.snakeBody, player.colorClass);
   } catch (error) {
-    player.life--;
-    updateLife(player);
+    player.life =0;
     if (!player.life) {
       alert("Game Over! for " + player.colorClass);
       clearInterval(player.intervalId);
@@ -140,9 +140,6 @@ function updateScoreBoard(player) {
     scoreBoard2.innerText = (snake2.snakeLength - 1) * 5;
   }
 }
-
-
-
 function responseToKey(keyStroke, player) {
   player.potentialTailPosition2 = player.potentialTailPosition;
   player.potentialTailPosition = player.current;
@@ -185,7 +182,7 @@ changeColour(snake2.snakeBody, snake2.colorClass);
 
 
 window.addEventListener("keydown", function (e) {
-  if (snake1.snakeLength) {
+  if (snake1.life) {
     if (e.code === "ArrowDown") {
       clearInterval(snake1.intervalId);
       snake1.intervalId = setInterval(() => {
@@ -217,7 +214,7 @@ window.addEventListener("keydown", function (e) {
 
 
 window.addEventListener("keydown", function (e) {
-  if (snake2.snakeLength) {
+  if (snake2.life) {
     if (e.code === "KeyS" || e.code === "Keys") {
       clearInterval(snake2.intervalId);
       snake2.intervalId = setInterval(() => {
