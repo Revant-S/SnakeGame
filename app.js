@@ -120,6 +120,16 @@ function moveTheSnake(player, foodPosition) {
         return;
       }
     }
+    if (snake1.snakeBody.includes(snake2.current) || snake2.snakeBody.includes(snake1.current)) {
+      snake1.life--;
+      snake2.life--;
+      updateLife(snake1);
+      updateLife(snake2);
+      clearInterval(snake1.intervalId);
+      clearInterval(snake2.intervalId);
+      snake1.current=snake1.potentialTailPosition;
+      snake2.current=snake2.potentialTailPosition;
+    }
     player.snakeBody.shift();
     player.snakeBody.push(player.current);
     changeColour(player.snakeBody, player.colorClass);
@@ -208,11 +218,6 @@ window.addEventListener("keydown", function (e) {
     console.log("snake is dead");
   }
 });
-
-
-
-
-
 window.addEventListener("keydown", function (e) {
   if (snake2.life) {
     if (e.code === "KeyS" || e.code === "Keys") {
