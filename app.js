@@ -3,17 +3,20 @@ const scoreBoard1 = document.querySelector("#player1");
 const scoreBoard2 = document.querySelector("#player2");
 const player1LifeBoard = document.querySelector("#player1Life");
 const player2LifeBoard = document.querySelector("#player2Life");
+const teleportingWindow1 = 130;
+const teleportingWindow2 = 230;
 function gameStart() {
   for (let i = 1; i <= 400; i++) {
     const newDiv = document.createElement("div");
     newDiv.setAttribute("class", "gridItem");
-    // newDiv.innerText=i;   //for reference
     gameBoard.appendChild(newDiv);
   }
 }
 gameStart();
 const NodeList = document.querySelectorAll(".gridItem");
 const scoreBoard = document.querySelector(".scoreBoard");
+NodeList[teleportingWindow1].classList.add("teleportingWindow");
+NodeList[teleportingWindow2].classList.add("teleportingWindow");
 let snakeColor = ["snake1", "snake2"];
 let p = [0, 40];
 const food = "food";
@@ -129,6 +132,12 @@ function moveTheSnake(player, foodPosition) {
       clearInterval(snake2.intervalId);
       snake1.current=snake1.potentialTailPosition;
       snake2.current=snake2.potentialTailPosition;
+    }
+    if (player.current == teleportingWindow1) {
+      player.current = teleportingWindow2;
+    }
+    else if(player.current == teleportingWindow2){
+      player.current = teleportingWindow1;
     }
     player.snakeBody.shift();
     player.snakeBody.push(player.current);
