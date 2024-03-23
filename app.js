@@ -6,6 +6,7 @@ const player2LifeBoard = document.querySelector("#player2Life");
 const teleportingWindow1 = 105;
 const teleportingWindow2 = 230;
 const powerUpsCount = [];
+let foodCount = 0;
 function gameStart() {
   for (let i = 1; i <= 400; i++) {
     const newDiv = document.createElement("div");
@@ -125,9 +126,6 @@ function generateMultipleFoods() {
     }
   }
 }
-
-
-
 function moveTheSnake(player) {
   try {
     if (player.snakeBody.includes(player.current)) {
@@ -200,6 +198,16 @@ function responseToKey(keyStroke, player) {
   }
   changeColour(player.snakeBody, player.colorClass);
   moveTheSnake(player);
+  console.log(foodPositions);
+  // generate powerUp
+  if (foodCount %5 == 0 && foodCount>0) {
+    foodCount = 0;
+    generateLifeBoosters();
+  }
+  if (foodPositions.length < 2) {
+    generateMultipleFoods();
+  }
+  //Eat the food
   if (foodPositions.includes(player.current)) {
     player.snakeBody.unshift(player.potentialTailPosition); // To increse the length
     const index = foodPositions.indexOf(player.current);
@@ -208,20 +216,16 @@ function responseToKey(keyStroke, player) {
     player.snakeLength++;
     player.foodEaten++;
     updateScoreBoard(player.colorClass);
+    foodCount++;
   }
+
+  // consume  powerUp
   if (powerUpsCount.includes(player.current)) {
     const index = powerUpsCount.indexOf(player.current);
-    powerUpsCount.splice(index, 1); // Delete that particular food
+    powerUpsCount.splice(index, 1); // Delete that particular powerUp
     NodeList[player.current].classList.remove("powerUps");
     player.life++;
     updateLife(player);
-  }
-
-  if (foodPositions.length < 2) {
-    generateMultipleFoods();
-  }
-  if (powerUpsCount.length == 0 ) {
-    generateLifeBoosters();
   }
 }
 changeColour(snake1.snakeBody, snake1.colorClass);

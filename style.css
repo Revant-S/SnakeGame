@@ -80,4 +80,8 @@
   flex-shrink: 1; 
   min-width: 20px; 
   border-radius: 2px;
+  /* padding: 3px; */
+}
+.poison{
+  background-color: #3d79cc;
 }
