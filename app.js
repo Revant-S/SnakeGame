@@ -3,13 +3,15 @@ const scoreBoard1 = document.querySelector("#player1");
 const scoreBoard2 = document.querySelector("#player2");
 const player1LifeBoard = document.querySelector("#player1Life");
 const player2LifeBoard = document.querySelector("#player2Life");
-const teleportingWindow1 = 130;
+const teleportingWindow1 = 105;
 const teleportingWindow2 = 230;
+const powerUpsCount = [];
 function gameStart() {
   for (let i = 1; i <= 400; i++) {
     const newDiv = document.createElement("div");
     newDiv.setAttribute("class", "gridItem");
     gameBoard.appendChild(newDiv);
+    // newDiv.innerText = i;
   }
 }
 gameStart();
@@ -21,7 +23,7 @@ let snakeColor = ["snake1", "snake2"];
 let p = [0, 40];
 const food = "food";
 let count = 1;
-const powerUpsPosition = -1;
+
 function createSnake(Name) {
   let q = p[0];
   this.playerName = Name;
@@ -43,7 +45,6 @@ function populateLifeBoard() {
     const newDiv1 = document.createElement("div");
     newDiv1.classList.add("lifeElement");
     player1LifeBoard.appendChild(newDiv1);
-
     const newDiv2 = document.createElement("div");
     newDiv2.classList.add("lifeElement");
     player2LifeBoard.appendChild(newDiv2);
@@ -98,22 +99,38 @@ function removeTheSnake(player) {
   player.snakeLength = 0;
   player.current = null;
 }
-let foodPosition = generateFood();
+let foodPositions = [];
+foodPositions.push(generateFood());
 
 function generateLifeBoosters() {
-  const p = Math.floor(Math.random*NodeList.length);
-  while (p == foodPosition) {
-    p = Math.floor(Math.random*NodeList.length);
+  let p = Math.floor(Math.random() * NodeList.length);
+  while (foodPositions.includes(p)) {
+    p = Math.floor(Math.random() * NodeList.length);
   }
   NodeList[p].classList.add("powerUps");
+  powerUpsCount.push(p);
   return p;
 }
-function moveTheSnake(player, foodPosition) {
+
+let powerUpPosition = generateLifeBoosters();
+
+function generateMultipleFoods() {
+  if (foodPositions.length < 2) {
+    const numberOfFoods = Math.floor(Math.random() * 3);
+    for (let index = 0; index < numberOfFoods; index++) {
+      let element = generateFood();
+      if (element != teleportingWindow1 || element != teleportingWindow2) {
+        foodPositions.push(element);
+      }
+    }
+  }
+}
+
+
+
+function moveTheSnake(player) {
   try {
-    if (
-      player.snakeBody.includes(player.current) &&
-      foodPosition != player.current
-    ) {
+    if (player.snakeBody.includes(player.current)) {
       player.life--;
       updateLife(player);
       if (!player.life) {
@@ -123,27 +140,32 @@ function moveTheSnake(player, foodPosition) {
         return;
       }
     }
-    if (snake1.snakeBody.includes(snake2.current) || snake2.snakeBody.includes(snake1.current)) {
+    //Collision of two sankes Logic
+    if (
+      snake1.snakeBody.includes(snake2.current) ||
+      snake2.snakeBody.includes(snake1.current)
+    ) {
       snake1.life--;
       snake2.life--;
       updateLife(snake1);
       updateLife(snake2);
       clearInterval(snake1.intervalId);
       clearInterval(snake2.intervalId);
-      snake1.current=snake1.potentialTailPosition;
-      snake2.current=snake2.potentialTailPosition;
+      snake1.current = snake1.potentialTailPosition;
+      snake2.current = snake2.potentialTailPosition;
     }
+    // Teleporting Windows Logic
     if (player.current == teleportingWindow1) {
       player.current = teleportingWindow2;
-    }
-    else if(player.current == teleportingWindow2){
+    } else if (player.current == teleportingWindow2) {
       player.current = teleportingWindow1;
     }
+    // actual snake moving Logic
     player.snakeBody.shift();
     player.snakeBody.push(player.current);
     changeColour(player.snakeBody, player.colorClass);
   } catch (error) {
-    player.life =0;
+    player.life = 0;
     if (!player.life) {
       alert("Game Over! for " + player.colorClass);
       clearInterval(player.intervalId);
@@ -177,29 +199,33 @@ function responseToKey(keyStroke, player) {
       break;
   }
   changeColour(player.snakeBody, player.colorClass);
-  moveTheSnake(player, foodPosition);
-  if (foodPosition == player.current) {
-    player.snakeBody.unshift(player.potentialTailPosition);
-    NodeList[foodPosition].classList.remove(food);
-    foodPosition = generateFood();
+  moveTheSnake(player);
+  if (foodPositions.includes(player.current)) {
+    player.snakeBody.unshift(player.potentialTailPosition); // To increse the length
+    const index = foodPositions.indexOf(player.current);
+    foodPositions.splice(index, 1); // Delete that particular food
+    NodeList[player.current].classList.remove("food");
     player.snakeLength++;
     player.foodEaten++;
     updateScoreBoard(player.colorClass);
   }
-  if (player.life<2 ) {
-    powerUpsPosition = generateLifeBoosters();
-  }
-  if (powerUpsPosition == player.current) {
+  if (powerUpsCount.includes(player.current)) {
+    const index = powerUpsCount.indexOf(player.current);
+    powerUpsCount.splice(index, 1); // Delete that particular food
+    NodeList[player.current].classList.remove("powerUps");
     player.life++;
     updateLife(player);
   }
+
+  if (foodPositions.length < 2) {
+    generateMultipleFoods();
+  }
+  if (powerUpsCount.length == 0 ) {
+    generateLifeBoosters();
+  }
 }
-
-
 changeColour(snake1.snakeBody, snake1.colorClass);
 changeColour(snake2.snakeBody, snake2.colorClass);
-
-
 window.addEventListener("keydown", function (e) {
   if (snake1.life) {
     if (e.code === "ArrowDown") {
@@ -223,9 +249,7 @@ window.addEventListener("keydown", function (e) {
         responseToKey("ArrowLeft", snake1);
       }, 100);
     }
-  } else {
-    console.log("snake is dead");
-  }
+  } 
 });
 window.addEventListener("keydown", function (e) {
   if (snake2.life) {
@@ -250,7 +274,5 @@ window.addEventListener("keydown", function (e) {
         responseToKey("ArrowLeft", snake2);
       }, 100);
     }
-  } else {
-    console.log("snake Is Dead!");
   }
 });

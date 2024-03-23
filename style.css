@@ -34,8 +34,8 @@
 .scoreBoard {
   display: flex;
   border: 2px solid black;
-  /* height: 80px;
-  width: 190px; */
+  height: 60px; 
+  width: 200px; 
   align-self: flex-start;
   margin-left: 40px;
   font-size: 40px;
@@ -43,43 +43,41 @@
 }
 .food {
   background-color: red;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 .food2 {
   background-color: darkgoldenrod;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 .food2 {
   background-color: darkblue;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 .gameBorder {
   padding: 30px;
   border: 1px solid black;
   background-image: url(borderFinal.png);
 }
-
-
 .teleportingWindow{
   background-color: blanchedalmond;
 }
-.life{
+.life {
   display: flex;
   margin-top: 20px;
- border: 1px solid black;
- gap: 2px;
- height: 60px;
-
+  border: 1px solid black;
+  gap: 2px;
+  height: 60px; 
+  width: 190px; 
 }
-
 .powerUps{
   background-color: gold;
   border-radius: 5px;
 }
-
-.lifeElement{
+.lifeElement {
   background-color: green;
-  height: 60px;
-  width: 30px;
+  height: 60px; 
+  flex-grow: 1; 
+  flex-shrink: 1; 
+  min-width: 20px; 
   border-radius: 2px;
 }
