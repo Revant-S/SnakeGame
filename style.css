@@ -19,10 +19,11 @@
 }
 
 .snake1 {
-  background-color: rgb(71, 8, 71);
+  background-color: lightgreen;
   text-align: center;
   border: 1px solid black;
   border-radius: 10px;
+  box-shadow: 2px 2px 2px black;
 }
 
 .snake2 {
@@ -30,6 +31,7 @@
   text-align: center;
   border: 1px solid black;
   border-radius: 10px;
+  box-shadow: 2px 2px 2px black;
 }
 .scoreBoard {
   display: flex;

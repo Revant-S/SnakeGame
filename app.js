@@ -12,7 +12,6 @@ function gameStart() {
     const newDiv = document.createElement("div");
     newDiv.setAttribute("class", "gridItem");
     gameBoard.appendChild(newDiv);
-    // newDiv.innerText = i;
   }
 }
 gameStart();
@@ -200,7 +199,7 @@ function responseToKey(keyStroke, player) {
   moveTheSnake(player);
   console.log(foodPositions);
   // generate powerUp
-  if (foodCount %5 == 0 && foodCount>0) {
+  if (foodCount % 5 == 0 && foodCount > 0) {
     foodCount = 0;
     generateLifeBoosters();
   }
@@ -253,7 +252,7 @@ window.addEventListener("keydown", function (e) {
         responseToKey("ArrowLeft", snake1);
       }, 100);
     }
-  } 
+  }
 });
 window.addEventListener("keydown", function (e) {
   if (snake2.life) {
