@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+</head>
+<body>
+
+<div id="countdown"></div>
+
+<script>
+// Function to update the countdown
+function updateCountdown(endTime) {
+    const now = new Date().getTime();
+    const timeLeft = endTime - now;
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    document.getElementById('countdown').innerHTML = `Time Left: ${minutes}m ${seconds}s`;
+
+    // If the countdown is over, display a message
+    if (timeLeft < 0) {
+        clearInterval(timerInterval);
+        document.getElementById('countdown').innerHTML = "Countdown Over!";
+    }
+}
+
+// Set the target time (year, month (0-11), day, hours, minutes, seconds)
+const targetTime = new Date(0, 0, 0, 0, 5, 0).getTime(); 
+
+// Update the countdown every second
+const timerInterval = setInterval(function() {
+    updateCountdown(targetTime);
+}, 1000);
+
+// Initial call to display the countdown immediately
+updateCountdown(targetTime);
+</script>
+
+</body>
+</html>

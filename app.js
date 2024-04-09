@@ -3,10 +3,14 @@ const scoreBoard1 = document.querySelector("#player1");
 const scoreBoard2 = document.querySelector("#player2");
 const player1LifeBoard = document.querySelector("#player1Life");
 const player2LifeBoard = document.querySelector("#player2Life");
+const player1Timer = document.querySelector("#player1Timer");
+const player2Timer = document.querySelector("#player2Timer");
 const teleportingWindow1 = 105;
 const teleportingWindow2 = 230;
+let sequenceFood = [];
 const powerUpsCount = [];
 let foodCount = 0;
+
 function gameStart() {
   for (let i = 1; i <= 400; i++) {
     const newDiv = document.createElement("div");
@@ -20,19 +24,22 @@ const scoreBoard = document.querySelector(".scoreBoard");
 NodeList[teleportingWindow1].classList.add("teleportingWindow");
 NodeList[teleportingWindow2].classList.add("teleportingWindow");
 let snakeColor = ["snake1", "snake2"];
-let p = [0, 40];
+let p = [
+  [1, 2, 3],
+  [40, 41, 42],
+];
 const food = "food";
 let count = 1;
-
 function createSnake(Name) {
   let q = p[0];
+  this.haveTime = true;
   this.playerName = Name;
   this.colorClass = snakeColor[0];
   this.name = this.colorClass[0];
-  this.snakeBody = [q];
-  this.current = q;
-  this.potentialTailPosition = q;
-  this.potentialTailPosition2 = q;
+  this.snakeBody = q;
+  this.current = q[2];
+  this.potentialTailPosition = q[0];
+  this.potentialTailPosition2 = q[0];
   this.snakeLength = 1;
   this.intervalId = null;
   this.life = 5;
@@ -53,6 +60,20 @@ function populateLifeBoard() {
 populateLifeBoard();
 const snake1 = new createSnake("snake1");
 const snake2 = new createSnake("snake2");
+
+function generateSequentialFood() {
+  const food1 = Math.floor((Math.random() * NodeList.length) / 3);
+  const food2 = Math.floor((Math.random() * NodeList.length) / 2);
+  NodeList[food1].classList.add("activeFood");
+  NodeList[food1].innerText = "1";
+  NodeList[food2].classList.add("inactiveFood");
+  NodeList[food2].innerText = "2";
+  return [
+    { food: food1, foodStatus: "active" },
+    { food: food2, foodStatus: "inactive" },
+  ];
+}
+
 function updateLife(player) {
   let playerLife = player.life;
   if (player.playerName == "snake1") {
@@ -87,9 +108,7 @@ function generateFood() {
     q = Math.floor(Math.random() * NodeList.length);
     NodeList[q].classList.add(food);
     return q;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 }
 function removeTheSnake(player) {
   for (let index = 0; index < player.snakeBody.length; index++) {
@@ -130,6 +149,7 @@ function moveTheSnake(player) {
     if (player.snakeBody.includes(player.current)) {
       player.life--;
       updateLife(player);
+      clearInterval(player.intervalId);
       if (!player.life) {
         alert("Game Over!! for " + player.colorClass);
         clearInterval(player.intervalId);
@@ -167,7 +187,6 @@ function moveTheSnake(player) {
       alert("Game Over! for " + player.colorClass);
       clearInterval(player.intervalId);
       removeTheSnake(player);
-      console.log(error);
     }
   }
 }
@@ -178,6 +197,7 @@ function updateScoreBoard(player) {
     scoreBoard2.innerText = (snake2.snakeLength - 1) * 5;
   }
 }
+
 function responseToKey(keyStroke, player) {
   player.potentialTailPosition2 = player.potentialTailPosition;
   player.potentialTailPosition = player.current;
@@ -197,12 +217,19 @@ function responseToKey(keyStroke, player) {
   }
   changeColour(player.snakeBody, player.colorClass);
   moveTheSnake(player);
-  console.log(foodPositions);
+
   // generate powerUp
   if (foodCount % 5 == 0 && foodCount > 0) {
     foodCount = 0;
     generateLifeBoosters();
   }
+  // generating the sequential food logic
+  if (foodCount % 4 == 0 && foodCount > 0 && !sequenceFood.length) {
+    sequenceFood = generateSequentialFood();
+    foodCount++;
+  }
+  console.log(sequenceFood);
+
   if (foodPositions.length < 2) {
     generateMultipleFoods();
   }
@@ -217,7 +244,6 @@ function responseToKey(keyStroke, player) {
     updateScoreBoard(player.colorClass);
     foodCount++;
   }
-
   // consume  powerUp
   if (powerUpsCount.includes(player.current)) {
     const index = powerUpsCount.indexOf(player.current);
@@ -226,11 +252,31 @@ function responseToKey(keyStroke, player) {
     player.life++;
     updateLife(player);
   }
+  if (sequenceFood.length&& player.current == sequenceFood[0].food) {
+    console.log("food1 Eaten");
+    sequenceFood[1].foodStatus = "active";
+    NodeList[sequenceFood[0].food].classList.remove("activeFood");
+    NodeList[sequenceFood[0].food].innerText = "";
+    NodeList[sequenceFood[1].food].classList.remove("inactiveFood");
+    NodeList[sequenceFood[1].food].classList.add("activeFood");
+    sequenceFood[1].playerName = player.playerName;
+  }
+  if (sequenceFood.length&&
+    player.current == sequenceFood[1].food &&
+    sequenceFood[1].playerName == player.playerName &&
+    sequenceFood[1].foodStatus == "active"
+    ) {
+    NodeList[sequenceFood[1].food].innerText = "";
+    NodeList[sequenceFood[1].food].classList.remove("activeFood");
+    player.snakeLength += 1;
+    updateScoreBoard(player.colorClass);
+    sequenceFood = [];
+  }
 }
 changeColour(snake1.snakeBody, snake1.colorClass);
 changeColour(snake2.snakeBody, snake2.colorClass);
 window.addEventListener("keydown", function (e) {
-  if (snake1.life) {
+  if (snake1.life && snake1.haveTime) {
     if (e.code === "ArrowDown") {
       clearInterval(snake1.intervalId);
       snake1.intervalId = setInterval(() => {
@@ -255,7 +301,7 @@ window.addEventListener("keydown", function (e) {
   }
 });
 window.addEventListener("keydown", function (e) {
-  if (snake2.life) {
+  if (snake2.life && snake2.haveTime) {
     if (e.code === "KeyS" || e.code === "Keys") {
       clearInterval(snake2.intervalId);
       snake2.intervalId = setInterval(() => {

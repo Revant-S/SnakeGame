@@ -78,12 +78,32 @@
 .lifeElement {
   background-color: green;
   height: 60px; 
-  flex-grow: 1; 
-  flex-shrink: 1; 
+  /* flex-grow: 1; 
+  flex-shrink: 1;  */
   min-width: 20px; 
   border-radius: 2px;
   /* padding: 3px; */
 }
 .poison{
   background-color: #3d79cc;
+}
+.inactiveFood{
+  background-color: yellow;
+}
+.activeFood{
+  background-color: darkgreen;
+}
+
+.playerTime{
+  display: flex;
+  justify-content: space-evenly;
+  border: 2px solid black;
+  margin-top: 20px;
+  height: 80px;
+  align-items: center;
+  font-size: 60px;
+  border-radius: 20px;
+}
+.colon{
+  padding-bottom: 5%;
 }
